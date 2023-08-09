@@ -1,23 +1,23 @@
 const db = require("../database");
 
 const savePractice = async (req, res) => {
-  const { nombre, telefono, correo, sede_id  } = req.body;
+  const { sede_id, jornada_id, detallegrupoc_id, detalle, docente_id } = req.body;
 
   db.query(
-    "INSERT INTO docentes (nombre, telefono, correo, sede_id) VALUES (?, ?, ?, ?)", [nombre, telefono, correo, sede_id], (err, practicesStored) => {
+    "INSERT INTO solicitudes (sede_id, jornada_id, detallegrupoc_id, detalle, docente_id) VALUES (?, ?, ?, ?, ?)", [sede_id, jornada_id, detallegrupoc_id, detalle, docente_id], (err, practicesStored) => {
       console.log(err);
       if (err)
         return res
           .status(500)
-          .send({ respuesta: "Error al guardar el maestro titular." });
+          .send({ respuesta: "Error al guardar la practica." });
 
       if (!practicesStored)
         return res
           .status(404)
-          .send({ respuesta: "No se ha podido guardar el maestro titular" });
+          .send({ respuesta: "No se ha podido guardar la practica" });
           
       return res.status(201).send({
-        respuesta: "El maestro titular se registro correctamente",
+        respuesta: "La practica se registro correctamente",
       });
     }
   );
@@ -41,6 +41,29 @@ const saveAssign = async (req, res) => {
           
       return res.status(201).send({
         respuesta: "La practica se asigno correctamente",
+      });
+    }
+  );
+};
+
+const saveRecord = async (req, res) => {
+  const { solicitud_id, periodo_id, juicio_id, nota  } = req.body;
+
+  db.query(
+    "INSERT INTO notas_practicas (solicitud_id, periodo_id, juicio_id, nota) VALUES (?, ?, ?, ?)", [solicitud_id, periodo_id, juicio_id, nota], (err, enrollStored) => {
+      console.log(err);
+      if (err)
+        return res
+          .status(500)
+          .send({ respuesta: "Error al guardar la matricula." });
+
+      if (!enrollStored)
+        return res
+          .status(404)
+          .send({ respuesta: "No se ha podido guardar la matricula" });
+          
+      return res.status(201).send({
+        respuesta: "La matricula se registro correctamente",
       });
     }
   );
@@ -103,6 +126,63 @@ const getListStudentsAvailable = async (req, res) => {
   );
 };
 
+const getConsolidateRecords = async (req, res) => {
+  db.query(
+    "SELECT e.id, e.nombre, CONCAT(sm.semestre,' ',g.grupo) AS grupo, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '1' AND s.estudiante_id = e.id AND n.periodo_id = '4' ORDER BY n.id DESC LIMIT 1) AS nota_ppi, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '2' AND s.estudiante_id = e.id AND n.periodo_id = '4' ORDER BY n.id DESC LIMIT 1) AS nota_investigacion, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '3' AND s.estudiante_id = e.id AND n.periodo_id = '4' ORDER BY n.id DESC LIMIT 1) AS nota_maestrotitular, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '4' AND s.estudiante_id = e.id AND n.periodo_id = '4' ORDER BY n.id DESC LIMIT 1) AS nota_supervisor FROM estudiantes e, matriculas_periodo m, grupos g, semestres sm WHERE m.grupo_id = g.id AND g.semestre_id = sm.id AND e.id = m.estudiante_id AND m.periodo_id = '4'  AND e.estado = '1' GROUP BY e.id ORDER BY sm.semestre, g.grupo, e.nombre",
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar el consolidado de notas." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen notas registradas" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getJudgments = async (req, res) => {
+  db.query(
+    "SELECT * FROM juicios ORDER BY id ASC",
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar los juicios." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen juicios registrados" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getTypePractice = async (req, res) => {
+  db.query(
+    "SELECT * FROM tipopractica ORDER BY id ASC",
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar tipos de practicas." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen tipos de practicas registrados" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
 const updatePractice = async (req, res) => {
 
   const id = req.params.id;  
@@ -142,9 +222,13 @@ const deleteAssign = async (req, res) => {
 module.exports = {
   savePractice,
   getPractices,
+  saveRecord,
   updatePractice,
   deleteAssign,
   getPracticesAssign,
   getListStudentsAvailable,
+  getConsolidateRecords,
   saveAssign,
+  getJudgments,
+  getTypePractice,
 };

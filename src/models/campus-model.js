@@ -111,6 +111,93 @@ const getCampus = async (req, res) => {
   );
 };
 
+const getTeachersByCampus = async (req, res) => {
+
+  const id = req.params.id;  
+
+  db.query(
+    "SELECT id, nombre FROM docentes WHERE sede_id = ? ORDER BY nombre ASC", [id],
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las sedes." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen sedes registradas" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getDegreesByCampus = async (req, res) => {
+
+  const id = req.params.id;  
+
+  db.query(
+    "SELECT g.id, g.grado FROM grados g, detalle_grupoc d WHERE g.id = d.grado_id AND d.sede_id = ? GROUP BY g.id", [id],
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las sedes." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen sedes registradas" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getGroupsByDegree = async (req, res) => {
+
+  const id = req.params.id;  
+  const sede_id = req.params.sede;  
+
+  db.query(
+    "SELECT d.id, d.grupo FROM detalle_grupoc d WHERE d.grado_id = ? AND d.sede_id = ?", [id, sede_id],
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las sedes." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen sedes registradas" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getJornadas = async (req, res) => {
+
+  db.query(
+    "SELECT * FROM jornadas ORDER BY id ASC",
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las jornadas." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen jornadas registradas" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
 const getSupervisors = async (req, res) => {
   db.query(
     "SELECT * FROM supervisores ORDER BY supervisor ASC",
@@ -269,6 +356,10 @@ module.exports = {
   getCampus,
   getSupervisors,
   getDegrees,
+  getTeachersByCampus,
+  getDegreesByCampus,
+  getGroupsByDegree,
+  getJornadas,
   getGroups,
   listCampusByInstitution,
   updateCampus,

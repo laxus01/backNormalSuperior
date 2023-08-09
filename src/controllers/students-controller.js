@@ -21,6 +21,10 @@ const controller = {
     await student.getStudentEnrroll(req, res);
   },
 
+  async getStudentsByPracticeActive(req, res) {
+    await student.getStudentsByPracticeActive(req, res);
+  },
+
   async getGroups(req, res) {
     await student.getGroups(req, res);
   },

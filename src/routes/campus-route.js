@@ -11,6 +11,10 @@ router.get("/getSupervisors", CampusController.getSupervisors);
 router.get("/getDegrees", CampusController.getDegrees);
 router.get("/getGroups", CampusController.getGroups);
 router.get("/listCampusByInstitution", CampusController.listCampusByInstitution);
+router.get("/getTeachersByCampus/:id", CampusController.getTeachersByCampus);
+router.get("/getDegreesByCampus/:id", CampusController.getDegreesByCampus);
+router.get("/getGroupsByDegree/:id/sede/:sede", CampusController.getGroupsByDegree);
+router.get("/getJornadas", CampusController.getJornadas);
 
 router.put("/update/:id", CampusController.updateCampus);
 router.put("/updateGroup/:id", CampusController.updateGroup);

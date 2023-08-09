@@ -5,6 +5,14 @@ const controller = {
     await practices.saveAssign(req, res);
   },
 
+  async savePractice(req, res) {
+    await practices.savePractice(req, res);
+  },
+
+  async saveRecord(req, res) {
+    await practices.saveRecord(req, res);
+  },
+
   async getPractices(req, res) {
     await practices.getPractices(req, res);
   },
@@ -15,6 +23,18 @@ const controller = {
 
   async getListStudentsAvailable(req, res) {
     await practices.getListStudentsAvailable(req, res);
+  },
+
+  async getJudgments(req, res) {
+    await practices.getJudgments(req, res);
+  },
+
+  async getTypePractice(req, res) {
+    await practices.getTypePractice(req, res);
+  },
+
+  async getConsolidateRecords(req, res) {
+    await practices.getConsolidateRecords(req, res);
   },
 
   async updatePractices(req, res) {

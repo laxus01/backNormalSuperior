@@ -33,6 +33,22 @@ const controller = {
     await campus.getGroups(req, res);
   },
 
+  async getTeachersByCampus(req, res) {
+    await campus.getTeachersByCampus(req, res);
+  },
+
+  async getDegreesByCampus(req, res) {
+    await campus.getDegreesByCampus(req, res);
+  },
+
+  async getGroupsByDegree(req, res) {
+    await campus.getGroupsByDegree(req, res);
+  },
+
+  async getJornadas(req, res) {
+    await campus.getJornadas(req, res);
+  },
+
   async listCampusByInstitution(req, res) {
     await campus.listCampusByInstitution(req, res);
   },

@@ -48,9 +48,6 @@ const saveEnroll = async (req, res) => {
 
 const saveEnrollGroup = async (req, res) => {
   const { grupo_anterior, grupo_actual, periodo_id  } = req.body;
-  console.log("grupo_anterior "+grupo_anterior);
-  console.log("grupo_actual "+grupo_actual);
-  console.log("periodo_id "+periodo_id);
 
   db.query(
     `INSERT INTO matriculas_periodo (estudiante_id, grupo_id, periodo_id) SELECT estudiante_id, ${grupo_actual}, ${periodo_id} FROM matriculas_periodo WHERE grupo_id = ? AND periodo_id = (? - 1)`, [grupo_anterior, periodo_id], (err, enrollStored) => {
@@ -94,6 +91,25 @@ const getStudent = async (req, res) => {
 const getStudentEnrroll = async (req, res) => {
   db.query(
     "SELECT m.id, e.identificacion, e.nombre, CONCAT(s.semestre,' ',g.grupo) AS grupo FROM semestres s, grupos g, estudiantes e, matriculas_periodo m, periodos p WHERE m.grupo_id = g.id AND g.semestre_id = s.id AND e.id = m.estudiante_id AND m.periodo_id = p.id AND p.estado = '1' ORDER BY s.id ASC, g.grupo ASC, e.nombre ASC",
+    (err, rows) => {
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las matriculas." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen matriculas registradas" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getStudentsByPracticeActive = async (req, res) => {
+  db.query(
+    "SELECT sa.id, e.nombre, i.institucion, CONCAT(sm.semestre,' ',g.grupo) AS grupo FROM estudiantes e, solicitudes_asignadas sa, solicitudes s, sedes se, instituciones i, grupos g, semestres sm, matriculas_periodo mp, periodos p WHERE e.id = sa.estudiante_id AND sa.solicitud_id = s.id AND s.sede_id = se.id AND se.institucion_id = i.id AND sa.semestre_id = sm.id AND e.id = mp.estudiante_id AND mp.grupo_id = g.id AND sa.estado = '1' GROUP BY e.id",
     (err, rows) => {
       if (err)
         return res.status(500).send({ res: "Error al consultar las matriculas." });
@@ -208,6 +224,7 @@ module.exports = {
   saveEnrollGroup,
   getStudent,
   getStudentEnrroll,
+  getStudentsByPracticeActive,
   getGroups,
   updateStudent,
   updateEnroll,
