@@ -111,6 +111,7 @@ const getStudentsByPracticeActive = async (req, res) => {
   db.query(
     "SELECT sa.id, e.nombre, i.institucion, CONCAT(sm.semestre,' ',g.grupo) AS grupo FROM estudiantes e, solicitudes_asignadas sa, solicitudes s, sedes se, instituciones i, grupos g, semestres sm, matriculas_periodo mp, periodos p WHERE e.id = sa.estudiante_id AND sa.solicitud_id = s.id AND s.sede_id = se.id AND se.institucion_id = i.id AND sa.semestre_id = sm.id AND e.id = mp.estudiante_id AND mp.grupo_id = g.id AND sa.estado = '1' GROUP BY e.id",
     (err, rows) => {
+      console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las matriculas." });
 
