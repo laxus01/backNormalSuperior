@@ -73,6 +73,7 @@ const getPractices = async (req, res) => {
   db.query(
     "SELECT sa.id, i.institucion, sd.sede, j.jornada, g.grado, d.grupo, sa.estudiante_id, dc.nombre AS profesor, e.nombre AS estudiante, sp.supervisor, tp.tipo, CONCAT(sm.semestre,' ',gr.grupo) AS grupoxsemestre FROM solicitudes s, solicitudes_asignadas sa, estudiantes e, sedes sd, docentes dc, instituciones i, jornadas j, detalle_grupoc d, grados g, grupos gr, semestres sm, tipopractica tp, supervisores sp, matriculas_periodo m WHERE s.id = sa.solicitud_id AND sa.estudiante_id = e.id AND sa.estado = '1' AND sa.tipopractica_id = tp.id AND s.detallegrupoc_id = d.id AND d.grado_id = g.id AND s.jornada_id = j.id AND s.sede_id = sd.id AND sd.institucion_id = i.id AND s.docente_id = dc.id AND sd.supervisor_id = sp.id AND e.id = m.estudiante_id AND m.periodo_id = '4' AND m.grupo_id = gr.id AND gr.semestre_id = sm.id AND sa.periodo_id = '4' ",
     (err, rows) => {
+      console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las practicas." });
 
