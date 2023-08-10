@@ -1,9 +1,9 @@
 module.exports = {
   normal: {
-    host: "containers-us-west-151.railway.app",
+    host: "containers-us-west-128.railway.app",
     user: "root",
-    password: "d23wr3zp00yds9FSY1Xn",
+    password: "XaEWrL48LXCge2whHPWR",
     database: "railway",
-    port: 6986
+    port: 7954
   },
 };
