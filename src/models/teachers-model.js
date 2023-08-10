@@ -5,7 +5,7 @@ const saveTeacher = async (req, res) => {
 
   db.query(
     "INSERT INTO docentes (nombre, telefono, correo, sede_id) VALUES (?, ?, ?, ?)", [nombre, telefono, correo, sede_id], (err, teachersStored) => {
-      console.log(err);
+      if (err) console.log(err);
       if (err)
         return res
           .status(500)
@@ -27,6 +27,7 @@ const getTeachers = async (req, res) => {
   db.query(
     "SELECT d.id, d.nombre, d.telefono, d.correo, i.institucion, s.sede FROM docentes d, instituciones i, sedes s WHERE d.sede_id = s.id AND s.institucion_id = i.id AND d.estado = 1 ORDER BY i.institucion ASC, d.nombre ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar los maestros titulares." });
 
@@ -51,6 +52,7 @@ const updateTeacher = async (req, res) => {
   db.query(
     "UPDATE docentes SET nombre = ?, telefono = ?, correo = ? WHERE id = ?",[nombre, telefono, correo, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al actualizar el maestro titular." });
 
@@ -69,6 +71,7 @@ const inactivateTeacher = async (req, res) => {
   db.query(
     "UPDATE docentes SET estado = ?  WHERE id = ?",[state, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al eliminar el maestro titular." });
 

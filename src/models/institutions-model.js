@@ -5,7 +5,7 @@ const saveInstitution = async (req, res) => {
 
   db.query(
     "INSERT INTO instituciones (institucion, rector, telefono, sector) VALUES (?, ?, ?, ?)", [institucion, rector, telefono, sector], (err, campusStored) => {
-      console.log(err);
+      if (err) console.log(err);
       if (err)
         return res
           .status(500)
@@ -27,6 +27,7 @@ const getInstitutions = async (req, res) => {
   db.query(
     "SELECT * FROM instituciones WHERE estado = 1 ORDER BY institucion ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las instituciones." });
 
@@ -51,6 +52,7 @@ const updateInstitution = async (req, res) => {
   db.query(
     "UPDATE instituciones SET institucion = ?, rector = ?, telefono = ?, sector = ? WHERE id = ?",[institucion, rector, telefono, sector, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al actualizar la institución." });
 
@@ -69,6 +71,7 @@ const inactivateInstitution = async (req, res) => {
   db.query(
     "UPDATE instituciones SET estado = ?  WHERE id = ?",[state, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al eliminar la institución." });
 

@@ -5,7 +5,7 @@ const saveCampus = async (req, res) => {
 
   db.query(
     "INSERT INTO sedes (sede, coordinador, telefono, institucion_id, supervisor_id) VALUES (?, ?, ?, ?, ?)", [sede, coordinador, telefono, institucion_id, supervisor_id], (err, campusStored) => {
-      console.log(err);
+      if (err) console.log(err);
       if (err)
         return res
           .status(500)
@@ -28,7 +28,7 @@ const saveSupervisor = async (req, res) => {
 
   db.query(
     "INSERT INTO supervisores (supervisor, telefono) VALUES (?, ?)", [supervisor, telefono], (err, supervisorStored) => {
-      console.log(err);
+      if (err) console.log(err);
       if (err)
         return res
           .status(500)
@@ -51,7 +51,7 @@ const saveDegree = async (req, res) => {
 
   db.query(
     "INSERT INTO grados (grado) VALUES (?)", [grado], (err, degreeStored) => {
-      console.log(err);
+      if (err) console.log(err);
       if (err)
         return res
           .status(500)
@@ -74,7 +74,7 @@ const saveGroup = async (req, res) => {
 
   db.query(
     "INSERT INTO detalle_grupoc (sede_id, grado_id, grupo) VALUES (?, ?, ?)", [sede_id, grado_id, grupo], (err, groupStored) => {
-      console.log(err);
+      if (err) console.log(err);
       if (err)
         return res
           .status(500)
@@ -96,6 +96,7 @@ const getCampus = async (req, res) => {
   db.query(
     "SELECT s.id, s.sede, s.coordinador, s.telefono, i.institucion, sp.supervisor FROM sedes s, instituciones i, supervisores sp WHERE i.id = s.institucion_id AND s.supervisor_id = sp.id AND s.estado = '1' ORDER BY i.institucion, s.sede ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las sedes." });
 
@@ -118,6 +119,7 @@ const getTeachersByCampus = async (req, res) => {
   db.query(
     "SELECT id, nombre FROM docentes WHERE sede_id = ? ORDER BY nombre ASC", [id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las sedes." });
 
@@ -140,6 +142,7 @@ const getDegreesByCampus = async (req, res) => {
   db.query(
     "SELECT g.id, g.grado FROM grados g, detalle_grupoc d WHERE g.id = d.grado_id AND d.sede_id = ? GROUP BY g.id", [id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las sedes." });
 
@@ -163,6 +166,7 @@ const getGroupsByDegree = async (req, res) => {
   db.query(
     "SELECT d.id, d.grupo FROM detalle_grupoc d WHERE d.grado_id = ? AND d.sede_id = ?", [id, sede_id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las sedes." });
 
@@ -183,6 +187,7 @@ const getJornadas = async (req, res) => {
   db.query(
     "SELECT * FROM jornadas ORDER BY id ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las jornadas." });
 
@@ -202,6 +207,7 @@ const getSupervisors = async (req, res) => {
   db.query(
     "SELECT * FROM supervisores ORDER BY supervisor ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar el supervisor." });
 
@@ -221,6 +227,7 @@ const getDegrees = async (req, res) => {
   db.query(
     "SELECT * FROM grados ORDER BY grado ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar el grado." });
 
@@ -240,6 +247,7 @@ const getGroups = async (req, res) => {
   db.query(
     "SELECT d.id, i.institucion, s.sede, g.grado, d.grupo FROM instituciones i, sedes s, detalle_grupoc d, grados g WHERE i.id = s.institucion_id AND s.id = d.sede_id AND d.grado_id = g.id AND d.estado = '1' ORDER BY g.id ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar los grupos." });
 
@@ -259,6 +267,7 @@ const listCampusByInstitution = async (req, res) => {
   db.query(
     "SELECT s.id, CONCAT(i.institucion,' - ',s.sede) AS sede FROM sedes s, instituciones i WHERE i.id = s.institucion_id AND s.estado = '1' AND i.estado = '1' ORDER BY i.institucion, s.sede ASC",
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al consultar las sedes." });
 
@@ -283,6 +292,7 @@ const updateCampus = async (req, res) => {
   db.query(
     "UPDATE sedes SET sede = ?, coordinador = ?, telefono = ?, supervisor_id = ? WHERE id = ?",[sede, coordinador, telefono, supervisor_id, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al actualizar la sede." });
 
@@ -302,6 +312,7 @@ const updateGroup = async (req, res) => {
   db.query(
     "UPDATE detalle_grupoc SET grado_id = ?, grupo = ? WHERE id = ?",[grado_id, grupo, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al actualizar el grupo." });
 
@@ -320,6 +331,7 @@ const inactivateCampus = async (req, res) => {
   db.query(
     "UPDATE sedes SET estado = ?  WHERE id = ?",[state, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al eliminar la sede." });
 
@@ -338,6 +350,7 @@ const inactivateGroup = async (req, res) => {
   db.query(
     "UPDATE detalle_grupoc SET estado = ?  WHERE id = ?",[state, id],
     (err, rows) => {
+      if (err) console.log(err);
       if (err)
         return res.status(500).send({ res: "Error al eliminar el grupo." });
 
