@@ -89,6 +89,75 @@ const getPractices = async (req, res) => {
   );
 };
 
+const getPracticesByGroup = async (req, res) => {  
+
+  const id = req.params.id;
+
+  db.query(
+    "SELECT sa.id, i.id AS institucion_id, i.institucion, sd.sede, j.jornada, g.grado, d.grupo, sa.estudiante_id, dc.nombre AS profesor, e.nombre AS estudiante, sp.id AS supervisor_id, sp.supervisor, tp.tipo, CONCAT(sm.semestre,' ',gr.grupo) AS grupoxsemestre, gr.id AS grupo_id FROM solicitudes s, solicitudes_asignadas sa, estudiantes e, sedes sd, docentes dc, instituciones i, jornadas j, detalle_grupoc d, grados g, grupos gr, semestres sm, tipopractica tp, supervisores sp, matriculas_periodo m WHERE s.id = sa.solicitud_id AND sa.estudiante_id = e.id AND sa.estado = '1' AND sa.tipopractica_id = tp.id AND s.detallegrupoc_id = d.id AND d.grado_id = g.id AND s.jornada_id = j.id AND s.sede_id = sd.id AND sd.institucion_id = i.id AND s.docente_id = dc.id AND sd.supervisor_id = sp.id AND e.id = m.estudiante_id AND m.periodo_id = '4' AND m.grupo_id = gr.id AND gr.semestre_id = sm.id AND sa.periodo_id = '4' AND gr.id = ? ", [id],
+    (err, rows) => {
+      if (err) console.log(err);
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las practicas." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen practicas registrados" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getPracticesByInstitution = async (req, res) => {  
+
+  const id = req.params.id;
+
+  db.query(
+    "SELECT sa.id, i.id AS institucion_id, i.institucion, sd.sede, j.jornada, g.grado, d.grupo, sa.estudiante_id, dc.nombre AS profesor, e.nombre AS estudiante, sp.id AS supervisor_id, sp.supervisor, tp.tipo, CONCAT(sm.semestre,' ',gr.grupo) AS grupoxsemestre, gr.id AS grupo_id FROM solicitudes s, solicitudes_asignadas sa, estudiantes e, sedes sd, docentes dc, instituciones i, jornadas j, detalle_grupoc d, grados g, grupos gr, semestres sm, tipopractica tp, supervisores sp, matriculas_periodo m WHERE s.id = sa.solicitud_id AND sa.estudiante_id = e.id AND sa.estado = '1' AND sa.tipopractica_id = tp.id AND s.detallegrupoc_id = d.id AND d.grado_id = g.id AND s.jornada_id = j.id AND s.sede_id = sd.id AND sd.institucion_id = i.id AND s.docente_id = dc.id AND sd.supervisor_id = sp.id AND e.id = m.estudiante_id AND m.periodo_id = '4' AND m.grupo_id = gr.id AND gr.semestre_id = sm.id AND sa.periodo_id = '4' AND i.id = ? ", [id],
+    (err, rows) => {
+      if (err) console.log(err);
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las practicas." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen practicas registrados" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
+const getPracticesBySupervisor = async (req, res) => {  
+
+  const id = req.params.id;
+
+  db.query(
+    "SELECT i.institucion, sd.sede, j.jornada, g.grado, d.grupo, dc.nombre AS profesor, e.nombre AS estudiante, sp.supervisor, tp.tipo, CONCAT(sm.semestre,' ',gr.grupo) AS grupoxsemestre, gr.id AS grupo_id, e.telefono AS telefonomf, dc.telefono AS telefonomt FROM solicitudes s, solicitudes_asignadas sa, estudiantes e, sedes sd, docentes dc, instituciones i, jornadas j, detalle_grupoc d, grados g, grupos gr, semestres sm, tipopractica tp, supervisores sp, matriculas_periodo m WHERE s.id = sa.solicitud_id AND sa.estudiante_id = e.id AND sa.estado = '1' AND sa.tipopractica_id = tp.id AND s.detallegrupoc_id = d.id AND d.grado_id = g.id AND s.jornada_id = j.id AND s.sede_id = sd.id AND sd.institucion_id = i.id AND s.docente_id = dc.id AND sd.supervisor_id = sp.id AND e.id = m.estudiante_id AND m.periodo_id = '4' AND m.grupo_id = gr.id AND gr.semestre_id = sm.id AND sa.periodo_id = '4' AND sp.id = ? ", [id],
+    (err, rows) => {
+      if (err) console.log(err);
+      if (err)
+        return res.status(500).send({ res: "Error al consultar las practicas." });
+
+      if (rows.length === 0)
+        return res
+          .status(200)
+          .send({ res: "No existen practicas registrados" });
+
+      return res.status(200).send({
+        desserts: rows,
+      });
+    }
+  );
+};
+
 const getPracticesAssign = async (req, res) => {
   db.query(
     "SELECT i.institucion, s.id, se.sede, j.jornada, g.grado, dg.grupo, d.nombre, d.telefono FROM solicitudes s, docentes d, grados g, detalle_grupoc dg, jornadas j, sedes se, instituciones i WHERE se.institucion_id = i.id AND s.sede_id = se.id AND s.jornada_id = j.id AND s.detallegrupoc_id = dg.id AND dg.grado_id = g.id AND s.docente_id = d.id AND i.id = se.institucion_id  AND s.id NOT IN(SELECT solicitud_id FROM solicitudes_asignadas WHERE estado = '1') ORDER BY i.institucion ASC, se.sede",
@@ -237,6 +306,9 @@ module.exports = {
   getPracticesAssign,
   getListStudentsAvailable,
   getConsolidateRecords,
+  getPracticesByGroup,
+  getPracticesByInstitution,
+  getPracticesBySupervisor,
   saveAssign,
   getJudgments,
   getTypePractice,

@@ -37,8 +37,16 @@ const controller = {
     await practices.getConsolidateRecords(req, res);
   },
 
-  async updatePractices(req, res) {
-    await practices.updatePractices(req, res);
+  async getPracticesByGroup(req, res) {
+    await practices.getPracticesByGroup(req, res);
+  },
+
+  async getPracticesByInstitution(req, res) {
+    await practices.getPracticesByInstitution(req, res);
+  },
+
+  async getPracticesBySupervisor(req, res) {
+    await practices.getPracticesBySupervisor(req, res);
   },
 
   async deleteAssign(req, res) {

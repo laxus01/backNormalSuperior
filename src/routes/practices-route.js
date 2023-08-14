@@ -11,8 +11,10 @@ router.get("/getJudgments", PracticesController.getJudgments);
 router.get("/getTypePractice", PracticesController.getTypePractice);
 router.get("/getListStudentsAvailable", PracticesController.getListStudentsAvailable);
 router.get("/getConsolidateRecords/:id", PracticesController.getConsolidateRecords);
+router.get("/getPracticesByGroup/:id", PracticesController.getPracticesByGroup);
+router.get("/getPracticesByInstitution/:id", PracticesController.getPracticesByInstitution);
+router.get("/getPracticesBySupervisor/:id", PracticesController.getPracticesBySupervisor);
 
-router.put("/update/:id", PracticesController.updatePractices);
 router.delete("/:id", PracticesController.deleteAssign);
 
 module.exports = router;
