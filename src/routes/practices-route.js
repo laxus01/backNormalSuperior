@@ -14,6 +14,7 @@ router.get("/getConsolidateRecords/:id", PracticesController.getConsolidateRecor
 router.get("/getPracticesByGroup/:id", PracticesController.getPracticesByGroup);
 router.get("/getPracticesByInstitution/:id", PracticesController.getPracticesByInstitution);
 router.get("/getPracticesBySupervisor/:id", PracticesController.getPracticesBySupervisor);
+router.put("/inactivate/:id", PracticesController.inactivatePractice);
 
 router.delete("/:id", PracticesController.deleteAssign);
 

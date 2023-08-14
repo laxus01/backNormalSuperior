@@ -49,6 +49,10 @@ const controller = {
     await practices.getPracticesBySupervisor(req, res);
   },
 
+  async inactivatePractice(req, res) {
+    await practices.inactivatePractice(req, res);
+  },
+
   async deleteAssign(req, res) {
     await practices.deleteAssign(req, res);
   },

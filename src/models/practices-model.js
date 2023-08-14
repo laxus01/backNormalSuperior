@@ -279,6 +279,26 @@ const updatePractice = async (req, res) => {
   );
 };
 
+const inactivatePractice = async (req, res) => {
+
+  const id = req.params.id;  
+  const state = 0;
+
+
+  db.query(
+    "UPDATE solicitudes_asignadas SET estado = ? WHERE id = ?",[state, id],
+    (err, rows) => {
+      if (err) console.log(err);
+      if (err)
+        return res.status(500).send({ res: "Error al eliminar la asignación." });
+
+      return res.status(200).send({
+        res: "Asignación eliminada correctamente",
+      });
+    }
+  );
+};
+
 const deleteAssign = async (req, res) => {
 
   const id = req.params.id;
@@ -303,6 +323,7 @@ module.exports = {
   saveRecord,
   updatePractice,
   deleteAssign,
+  inactivatePractice,
   getPracticesAssign,
   getListStudentsAvailable,
   getConsolidateRecords,
