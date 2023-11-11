@@ -75,12 +75,12 @@ const getStudent = async (req, res) => {
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al consultar las instituciones." });
+        return res.status(500).send({ res: "Error al consultar los estudiantes." });
 
       if (rows.length === 0)
         return res
           .status(200)
-          .send({ res: "No existen instituciones registradas" });
+          .send({ res: "No existen estudiantes registradas" });
 
       return res.status(200).send({
         desserts: rows,
