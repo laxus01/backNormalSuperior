@@ -37,6 +37,10 @@ const controller = {
     await practices.getConsolidateRecords(req, res);
   },
 
+  async getConsolidateRecordsByGroup(req, res) {
+    await practices.getConsolidateRecordsByGroup(req, res);
+  },
+
   async getPracticesByGroup(req, res) {
     await practices.getPracticesByGroup(req, res);
   },
