@@ -1,9 +1,9 @@
 module.exports = {
   normal: {
-    host: "containers-us-west-128.railway.app",
+    host: "monorail.proxy.rlwy.net",
     user: "root",
-    password: "XaEWrL48LXCge2whHPWR",
+    password: "D6A24DCHCDe-ehfF6BFG5baC4-G3-f-5",
     database: "railway",
-    port: 7954
+    port: 28083
   },
 };
