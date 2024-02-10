@@ -1,7 +1,7 @@
 const db = require("../database");
 
 const saveStudent = async (req, res) => {
-  const { nombre, telefono, correo  } = req.body;
+  const { identificacion, nombre, telefono, correo  } = req.body;
 
   db.query(
     "INSERT INTO estudiantes (identificacion, nombre, telefono, correo) VALUES (?, ?, ?, ?)", [identificacion, nombre, telefono, correo], (err, studentStored) => {
