@@ -4,20 +4,20 @@ const saveStudent = async (req, res) => {
   const { nombre, telefono, correo  } = req.body;
 
   db.query(
-    "INSERT INTO estudiantes (nombre, telefono, correo) VALUES (?, ?, ?)", [nombre, telefono, correo], (err, studentStored) => {
+    "INSERT INTO estudiantes (identificacion, nombre, telefono, correo) VALUES (?, ?, ?, ?)", [identificacion, nombre, telefono, correo], (err, studentStored) => {
       if (err) console.log(err);
       if (err)
         return res
           .status(500)
-          .send({ respuesta: "Error al guardar la institución." });
+          .send({ respuesta: "Error al guardar el maestro en formación." });
 
       if (!studentStored)
         return res
           .status(404)
-          .send({ respuesta: "No se ha podido guardar la institución" });
+          .send({ respuesta: "No se ha podido guardar el maestro en formación" });
           
       return res.status(201).send({
-        respuesta: "La institución se registro correctamente",
+        respuesta: "El maestro en formación se registro correctamente",
       });
     }
   );
