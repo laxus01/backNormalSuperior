@@ -153,11 +153,11 @@ const getGroups = async (req, res) => {
 const updateStudent = async (req, res) => {
 
   const id = req.params.id;  
-  const { nombre, telefono, correo } = req.body;
+  const { identificacion, nombre, telefono, correo } = req.body;
 
 
   db.query(
-    "UPDATE estudiantes SET nombre = ?, telefono = ?, correo = ? WHERE id = ?",[nombre, telefono, correo, id],
+    "UPDATE estudiantes SET identificacion = ?, nombre = ?, telefono = ?, correo = ? WHERE id = ?",[identificacion, nombre, telefono, correo, id],
     (err, rows) => {
       if (err) console.log(err);
       if (err)
