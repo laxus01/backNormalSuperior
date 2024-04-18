@@ -7,3 +7,12 @@ module.exports = {
     port: 28083
   },
 };
+
+/* module.exports = {
+  normal: {
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "normal",
+  },
+}; */

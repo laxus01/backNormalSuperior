@@ -243,7 +243,7 @@ const getDegrees = async (req, res) => {
 
 const getGroups = async (req, res) => {
   db.query(
-    "SELECT d.id, i.institucion, s.sede, g.grado, d.grupo FROM instituciones i, sedes s, detalle_grupoc d, grados g WHERE i.id = s.institucion_id AND s.id = d.sede_id AND d.grado_id = g.id AND d.estado = '1' ORDER BY g.id ASC",
+    "SELECT d.id, i.institucion, s.sede, g.id AS grado_id, g.grado, d.grupo FROM instituciones i, sedes s, detalle_grupoc d, grados g WHERE i.id = s.institucion_id AND s.id = d.sede_id AND d.grado_id = g.id AND d.estado = '1' ORDER BY g.id ASC",
     (err, rows) => {
       if (err) console.log(err);
       if (err)
@@ -280,8 +280,6 @@ const listCampusByInstitution = async (req, res) => {
 const updateCampus = async (req, res) => {
   const id = req.params.id;
   const { sede, coordinador, telefono, direccion, supervisor_id } = req.body;
-
-  console.log("supervisor_id", supervisor_id);
 
   db.query(
     "UPDATE sedes SET sede = ?, coordinador = ?, telefono = ?, direccion = ?, supervisor_id = ? WHERE id = ?",
