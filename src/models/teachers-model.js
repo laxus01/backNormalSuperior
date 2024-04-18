@@ -1,10 +1,12 @@
 const db = require("../database");
 
 const saveTeacher = async (req, res) => {
-  const { nombre, telefono, correo, sede_id  } = req.body;
+  const { nombre, telefono, correo, sede_id } = req.body;
 
   db.query(
-    "INSERT INTO docentes (nombre, telefono, correo, sede_id) VALUES (?, ?, ?, ?)", [nombre, telefono, correo, sede_id], (err, teachersStored) => {
+    "INSERT INTO docentes (nombre, telefono, correo, sede_id) VALUES (?, ?, ?, ?)",
+    [nombre, telefono, correo, sede_id],
+    (err, teachersStored) => {
       if (err) console.log(err);
       if (err)
         return res
@@ -15,7 +17,7 @@ const saveTeacher = async (req, res) => {
         return res
           .status(404)
           .send({ respuesta: "No se ha podido guardar el maestro titular" });
-          
+
       return res.status(201).send({
         respuesta: "El maestro titular se registro correctamente",
       });
@@ -29,7 +31,9 @@ const getTeachers = async (req, res) => {
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al consultar los maestros titulares." });
+        return res
+          .status(500)
+          .send({ res: "Error al consultar los maestros titulares." });
 
       if (rows.length === 0)
         return res
@@ -44,17 +48,18 @@ const getTeachers = async (req, res) => {
 };
 
 const updateTeacher = async (req, res) => {
-
-  const id = req.params.id;  
+  const id = req.params.id;
   const { nombre, telefono, correo } = req.body;
 
-
   db.query(
-    "UPDATE docentes SET nombre = ?, telefono = ?, correo = ? WHERE id = ?",[nombre, telefono, correo, id],
+    "UPDATE docentes SET nombre = ?, telefono = ?, correo = ? WHERE id = ?",
+    [nombre, telefono, correo, id],
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al actualizar el maestro titular." });
+        return res
+          .status(500)
+          .send({ res: "Error al actualizar el maestro titular." });
 
       return res.status(200).send({
         res: "El maestro titular actualizado correctamente",
@@ -64,16 +69,18 @@ const updateTeacher = async (req, res) => {
 };
 
 const inactivateTeacher = async (req, res) => {
-
-  const id = req.params.id;  
+  const id = req.params.id;
   const state = 0;
 
   db.query(
-    "UPDATE docentes SET estado = ?  WHERE id = ?",[state, id],
+    "UPDATE docentes SET estado = ?  WHERE id = ?",
+    [state, id],
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al eliminar el maestro titular." });
+        return res
+          .status(500)
+          .send({ res: "Error al eliminar el maestro titular." });
 
       return res.status(200).send({
         res: "El maestro titular se elimino correctamente",

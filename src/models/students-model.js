@@ -1,10 +1,12 @@
 const db = require("../database");
 
 const saveStudent = async (req, res) => {
-  const { identificacion, nombre, telefono, correo  } = req.body;
+  const { identificacion, nombre, telefono, correo } = req.body;
 
   db.query(
-    "INSERT INTO estudiantes (identificacion, nombre, telefono, correo) VALUES (?, ?, ?, ?)", [identificacion, nombre, telefono, correo], (err, studentStored) => {
+    "INSERT INTO estudiantes (identificacion, nombre, telefono, correo) VALUES (?, ?, ?, ?)",
+    [identificacion, nombre, telefono, correo],
+    (err, studentStored) => {
       if (err) console.log(err);
       if (err)
         return res
@@ -14,8 +16,10 @@ const saveStudent = async (req, res) => {
       if (!studentStored)
         return res
           .status(404)
-          .send({ respuesta: "No se ha podido guardar el maestro en formación" });
-          
+          .send({
+            respuesta: "No se ha podido guardar el maestro en formación",
+          });
+
       return res.status(201).send({
         respuesta: "El maestro en formación se registro correctamente",
       });
@@ -24,10 +28,12 @@ const saveStudent = async (req, res) => {
 };
 
 const saveEnroll = async (req, res) => {
-  const { estudiante_id, grupo_id, periodo_id  } = req.body;
+  const { estudiante_id, grupo_id, periodo_id } = req.body;
 
   db.query(
-    "INSERT INTO matriculas_periodo (estudiante_id, grupo_id, periodo_id) VALUES (?, ?, ?)", [estudiante_id, grupo_id, periodo_id], (err, enrollStored) => {
+    "INSERT INTO matriculas_periodo (estudiante_id, grupo_id, periodo_id) VALUES (?, ?, ?)",
+    [estudiante_id, grupo_id, periodo_id],
+    (err, enrollStored) => {
       if (err) console.log(err);
       if (err)
         return res
@@ -38,7 +44,7 @@ const saveEnroll = async (req, res) => {
         return res
           .status(404)
           .send({ respuesta: "No se ha podido guardar la matricula" });
-          
+
       return res.status(201).send({
         respuesta: "La matricula se registro correctamente",
       });
@@ -47,10 +53,12 @@ const saveEnroll = async (req, res) => {
 };
 
 const saveEnrollGroup = async (req, res) => {
-  const { grupo_anterior, grupo_actual, periodo_id  } = req.body;
+  const { grupo_anterior, grupo_actual, periodo_id } = req.body;
 
   db.query(
-    `INSERT INTO matriculas_periodo (estudiante_id, grupo_id, periodo_id) SELECT estudiante_id, ${grupo_actual}, ${periodo_id} FROM matriculas_periodo WHERE grupo_id = ? AND periodo_id = (? - 1)`, [grupo_anterior, periodo_id], (err, enrollStored) => {
+    `INSERT INTO matriculas_periodo (estudiante_id, grupo_id, periodo_id) SELECT estudiante_id, ${grupo_actual}, ${periodo_id} FROM matriculas_periodo WHERE grupo_id = ? AND periodo_id = (? - 1)`,
+    [grupo_anterior, periodo_id],
+    (err, enrollStored) => {
       if (err) console.log(err);
       if (err)
         return res
@@ -61,7 +69,7 @@ const saveEnrollGroup = async (req, res) => {
         return res
           .status(404)
           .send({ respuesta: "No se ha podido guardar la matricula" });
-          
+
       return res.status(201).send({
         respuesta: "La matricula se registro correctamente",
       });
@@ -75,7 +83,9 @@ const getStudent = async (req, res) => {
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al consultar los estudiantes." });
+        return res
+          .status(500)
+          .send({ res: "Error al consultar los estudiantes." });
 
       if (rows.length === 0)
         return res
@@ -95,7 +105,9 @@ const getStudentEnrroll = async (req, res) => {
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al consultar las matriculas." });
+        return res
+          .status(500)
+          .send({ res: "Error al consultar las matriculas." });
 
       if (rows.length === 0)
         return res
@@ -116,7 +128,9 @@ const getStudentsByPracticeActive = async (req, res) => {
       if (err) console.log(err);
       console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al consultar las matriculas." });
+        return res
+          .status(500)
+          .send({ res: "Error al consultar las matriculas." });
 
       if (rows.length === 0)
         return res
@@ -136,7 +150,9 @@ const getGroups = async (req, res) => {
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al consultar las matriculas." });
+        return res
+          .status(500)
+          .send({ res: "Error al consultar las matriculas." });
 
       if (rows.length === 0)
         return res
@@ -151,17 +167,18 @@ const getGroups = async (req, res) => {
 };
 
 const updateStudent = async (req, res) => {
-
-  const id = req.params.id;  
+  const id = req.params.id;
   const { identificacion, nombre, telefono, correo } = req.body;
 
-
   db.query(
-    "UPDATE estudiantes SET identificacion = ?, nombre = ?, telefono = ?, correo = ? WHERE id = ?",[identificacion, nombre, telefono, correo, id],
+    "UPDATE estudiantes SET identificacion = ?, nombre = ?, telefono = ?, correo = ? WHERE id = ?",
+    [identificacion, nombre, telefono, correo, id],
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al actualizar el estudiante." });
+        return res
+          .status(500)
+          .send({ res: "Error al actualizar el estudiante." });
 
       return res.status(200).send({
         res: "Estudiante actualizado correctamente",
@@ -171,13 +188,12 @@ const updateStudent = async (req, res) => {
 };
 
 const updateEnroll = async (req, res) => {
-
-  const id = req.params.id;  
+  const id = req.params.id;
   const { grupo_id } = req.body;
 
-
   db.query(
-    "UPDATE matriculas_periodo SET grupo_id = ? WHERE id = ?",[grupo_id, id],
+    "UPDATE matriculas_periodo SET grupo_id = ? WHERE id = ?",
+    [grupo_id, id],
     (err, rows) => {
       if (err) console.log(err);
       if (err)
@@ -191,16 +207,18 @@ const updateEnroll = async (req, res) => {
 };
 
 const changeStateStudent = async (req, res) => {
-
-  const id = req.params.id;  
-  const state = req.params.state === 'RETIRADO' ? 1 : 0;
+  const id = req.params.id;
+  const state = req.params.state === "RETIRADO" ? 1 : 0;
 
   db.query(
-    "UPDATE estudiantes SET estado = ?  WHERE id = ?",[state, id],
+    "UPDATE estudiantes SET estado = ?  WHERE id = ?",
+    [state, id],
     (err, rows) => {
       if (err) console.log(err);
       if (err)
-        return res.status(500).send({ res: "Error al eliminar el estudiante." });
+        return res
+          .status(500)
+          .send({ res: "Error al eliminar el estudiante." });
 
       return res.status(200).send({
         res: "El estudiante se elimino correctamente",
@@ -210,21 +228,17 @@ const changeStateStudent = async (req, res) => {
 };
 
 const deleteEnroll = async (req, res) => {
-
   const id = req.params.id;
 
-  db.query(
-    "DELETE FROM matriculas_periodo WHERE id = ?",[id],
-    (err, rows) => {
-      if (err) console.log(err);
-      if (err)
-        return res.status(500).send({ res: "Error al eliminar la matricula" });
+  db.query("DELETE FROM matriculas_periodo WHERE id = ?", [id], (err, rows) => {
+    if (err) console.log(err);
+    if (err)
+      return res.status(500).send({ res: "Error al eliminar la matricula" });
 
-      return res.status(200).send({
-        res: "matricula eliminada correctamente",
-      });
-    }
-  );
+    return res.status(200).send({
+      res: "matricula eliminada correctamente",
+    });
+  });
 };
 
 module.exports = {

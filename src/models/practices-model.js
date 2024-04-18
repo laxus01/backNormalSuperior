@@ -269,11 +269,11 @@ const getConsolidateRecords = async (req, res) => {
 };
 
 const getConsolidateRecordsByGroup = async (req, res) => {
-
   const grupo_id = req.params.id;
 
   db.query(
-    "SELECT e.id, e.nombre, CONCAT(sm.semestre,' ',g.grupo) AS grupo, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '1' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_ppi, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '2' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_investigacion, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '3' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_maestrotitular, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '5' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_supervisor FROM estudiantes e, matriculas_periodo m, grupos g, semestres sm WHERE m.grupo_id = g.id AND g.semestre_id = sm.id AND e.id = m.estudiante_id AND m.grupo_id = ? AND m.periodo_id = '5' AND e.estado = '1' ORDER BY sm.semestre, g.grupo, e.nombre", [grupo_id],
+    "SELECT e.id, e.nombre, CONCAT(sm.semestre,' ',g.grupo) AS grupo, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '1' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_ppi, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '2' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_investigacion, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '3' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_maestrotitular, (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s WHERE s.id = n.solicitud_id AND n.juicio_id = '5' AND s.estudiante_id = e.id AND n.periodo_id = '5' ORDER BY n.id DESC LIMIT 1) AS nota_supervisor FROM estudiantes e, matriculas_periodo m, grupos g, semestres sm WHERE m.grupo_id = g.id AND g.semestre_id = sm.id AND e.id = m.estudiante_id AND m.grupo_id = ? AND m.periodo_id = '5' AND e.estado = '1' ORDER BY sm.semestre, g.grupo, e.nombre",
+    [grupo_id],
     (err, rows) => {
       if (err) console.log(err);
       console.log(err);

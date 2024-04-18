@@ -15,12 +15,11 @@ const getUser = async (req, res) => {
     "SELECT * FROM users WHERE user = ? AND password = ?",
     [login, password],
     (err, rows) => {
-      if(err) console.log(err);
+      if (err) console.log(err);
       if (err)
         return res
           .status(500)
           .send({ respuesta: "Error al consultar el usuario" });
-          
 
       if (rows.length === 0)
         return res
@@ -31,7 +30,7 @@ const getUser = async (req, res) => {
         res: {
           message: "Autenticación correcta",
           token: token,
-          name: rows[0].name
+          name: rows[0].name,
         },
       });
     }
