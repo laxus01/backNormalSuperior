@@ -1,10 +1,10 @@
 module.exports = {
   normal: {
-    host: "roundhouse.proxy.rlwy.net",
+    host: "monorail.proxy.rlwy.net",
     user: "root",
-    password: "D6A24DCHCDe-ehfF6BFG5baC4-G3-f-5",
+    password: "CZJYufcmUKnSsImXHzZZGLnKrIoLuJds",
     database: "railway",
-    port: 18259
+    port: 41404
   },
 };
 
