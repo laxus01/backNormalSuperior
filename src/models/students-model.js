@@ -168,11 +168,11 @@ const getGroups = async (req, res) => {
 
 const updateStudent = async (req, res) => {
   const id = req.params.id;
-  const { identificacion, nombre, telefono, correo } = req.body;
+  const { identificacion, nombre, telefono, correo, estado } = req.body;
 
   db.query(
-    "UPDATE estudiantes SET identificacion = ?, nombre = ?, telefono = ?, correo = ? WHERE id = ?",
-    [identificacion, nombre, telefono, correo, id],
+    "UPDATE estudiantes SET identificacion = ?, nombre = ?, telefono = ?, correo = ?, estado = ? WHERE id = ?",
+    [identificacion, nombre, telefono, correo, estado, id],
     (err, rows) => {
       if (err) console.log(err);
       if (err)
