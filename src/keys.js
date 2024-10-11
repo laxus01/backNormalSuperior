@@ -1,10 +1,10 @@
 module.exports = {
   normal: {
-    host: "monorail.proxy.rlwy.net",
+    host: "mysql.railway.internal",
     user: "root",
     password: "CZJYufcmUKnSsImXHzZZGLnKrIoLuJds",
     database: "railway",
-    port: 41404
+    port: 3306
   },
 };
 

@@ -281,6 +281,9 @@ const updateCampus = async (req, res) => {
   const id = req.params.id;
   const { sede, coordinador, telefono, direccion, supervisor_id } = req.body;
 
+  console.log(req.body);
+  console.log(id);
+
   db.query(
     "UPDATE sedes SET sede = ?, coordinador = ?, telefono = ?, direccion = ?, supervisor_id = ? WHERE id = ?",
     [sede, coordinador, telefono, direccion, supervisor_id, id],
