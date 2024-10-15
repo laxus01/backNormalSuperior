@@ -1,10 +1,10 @@
 module.exports = {
   normal: {
-    host: "mysql.railway.internal",
+    host: "autorack.proxy.rlwy.net",
     user: "root",
-    password: "CZJYufcmUKnSsImXHzZZGLnKrIoLuJds",
+    password: "FKlzlezSZWiqnzZqtrdXgDTmPKKWYTdx",
     database: "railway",
-    port: 3306
+    port: 29890
   },
 };
 
