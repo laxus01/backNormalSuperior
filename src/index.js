@@ -40,7 +40,20 @@ const corsOptions = {
     // Allow requests with no origin (mobile apps, etc.)
     if (!origin) return callback(null, true);
     
-    if (config.cors.allowedOrigins.indexOf(origin) !== -1) {
+    // Allow exact matches from configuration, and Railway subdomains
+    let isAllowed = config.cors.allowedOrigins.indexOf(origin) !== -1;
+    if (!isAllowed) {
+      try {
+        const { hostname } = new URL(origin);
+        if (hostname.endsWith('.railway.app')) {
+          isAllowed = true;
+        }
+      } catch (e) {
+        // Ignore URL parse errors; will be handled as not allowed
+      }
+    }
+
+    if (isAllowed) {
       callback(null, true);
     } else {
       logger.warn('CORS blocked request', { origin, userAgent: 'unknown' });
@@ -50,10 +63,22 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'sec-ch-ua',
+    'sec-ch-ua-mobile',
+    'sec-ch-ua-platform'
+  ]
 };
 
 app.use(cors(corsOptions));
+// Explicitly handle preflight for all routes and the login endpoint
+app.options('*', cors(corsOptions));
+app.options(usersPath + '/login', cors(corsOptions));
 
 // Body parsing middlewares
 app.use(bodyParser.urlencoded({ 
