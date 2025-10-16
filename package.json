@@ -6,20 +6,29 @@
   "scripts": {
     "dev": "nodemon src/",
     "start": "node src/index.js",
-    "test": "jest --verbose"
+    "restart": "node kill-and-restart.js",
+    "test": "jest --verbose",
+    "setup-db": "node src/scripts/setup-database.js",
+    "validate-db": "node validate-database.js",
+    "security-check": "npm audit && echo 'Security check completed'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.1",
+    "express-rate-limit": "^7.1.5",
     "express-validator": "^6.12.0",
-    "jsonwebtoken": "^8.5.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.1",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
-    "mysql2": "^3.3.3"
+    "mysql2": "^3.3.3",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "jest": "^27.0.6",
