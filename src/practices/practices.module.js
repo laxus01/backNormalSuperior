@@ -24,7 +24,7 @@ router.delete("/deleteAssign/:id", PracticesController.deleteAssign);
 router.post("/saveRecord", PracticesController.saveRecord);
 router.get("/consolidateRecords", PracticesController.getConsolidateRecords);
 router.get("/getConsolidateRecords", PracticesController.getConsolidateRecords); // Frontend compatibility route
-router.get("/consolidateRecords/byGroup/:id", PracticesController.getConsolidateRecordsByGroup);
+router.get("/getConsolidateRecordsByGroup/:id", PracticesController.getConsolidateRecordsByGroup);
 
 // Catalog routes
 router.get("/judgments", PracticesController.getJudgments);
