@@ -1,4 +1,5 @@
 const db = require("../../database");
+const periodUtil = require("../../shared/utils/period.util");
 
 class PracticesRepository {
   async createPractice(practiceData) {
@@ -39,6 +40,8 @@ class PracticesRepository {
   }
 
   async findAllPractices() {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
     const query = `
       SELECT sa.id, i.id AS institucion_id, i.institucion, sd.sede, j.jornada, g.grado, d.grupo, 
              sa.estudiante_id, dc.nombre AS profesor, e.nombre AS estudiante, sp.id AS supervisor_id, 
@@ -58,16 +61,18 @@ class PracticesRepository {
         AND s.docente_id = dc.id 
         AND sd.supervisor_id = sp.id 
         AND e.id = m.estudiante_id 
-        AND m.periodo_id = '8' 
+        AND m.periodo_id = ? 
         AND m.grupo_id = gr.id 
         AND gr.semestre_id = sm.id 
-        AND sa.periodo_id = '8'
+        AND sa.periodo_id = ?
     `;
     
-    return await db.query(query);
+    return await db.query(query, [activePeriodId, activePeriodId]);
   }
 
   async findPracticesByGroup(groupId) {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
     const query = `
       SELECT sa.id, i.id AS institucion_id, i.institucion, sd.sede, j.jornada, g.grado, d.grupo, 
              sa.estudiante_id, dc.nombre AS profesor, e.nombre AS estudiante, sp.id AS supervisor_id, 
@@ -87,17 +92,19 @@ class PracticesRepository {
         AND s.docente_id = dc.id 
         AND sd.supervisor_id = sp.id 
         AND e.id = m.estudiante_id 
-        AND m.periodo_id = '8' 
+        AND m.periodo_id = ? 
         AND m.grupo_id = gr.id 
         AND gr.semestre_id = sm.id 
-        AND sa.periodo_id = '8' 
+        AND sa.periodo_id = ? 
         AND gr.id = ?
     `;
     
-    return await db.query(query, [groupId]);
+    return await db.query(query, [activePeriodId, activePeriodId, groupId]);
   }
 
   async findPracticesByInstitution(institutionId) {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
     const query = `
       SELECT sa.id, i.id AS institucion_id, i.institucion, sd.sede, j.jornada, g.grado, d.grupo, 
              sa.estudiante_id, dc.nombre AS profesor, e.nombre AS estudiante, sp.id AS supervisor_id, 
@@ -117,17 +124,19 @@ class PracticesRepository {
         AND s.docente_id = dc.id 
         AND sd.supervisor_id = sp.id 
         AND e.id = m.estudiante_id 
-        AND m.periodo_id = '8' 
+        AND m.periodo_id = ? 
         AND m.grupo_id = gr.id 
         AND gr.semestre_id = sm.id 
-        AND sa.periodo_id = '8' 
+        AND sa.periodo_id = ? 
         AND i.id = ?
     `;
     
-    return await db.query(query, [institutionId]);
+    return await db.query(query, [activePeriodId, activePeriodId, institutionId]);
   }
 
   async findPracticesBySupervisor(supervisorId) {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
     const query = `
       SELECT i.institucion, sd.sede, j.jornada, g.grado, d.grupo, dc.nombre AS profesor, 
              e.nombre AS estudiante, sp.supervisor, tp.tipo, CONCAT(sm.semestre,' ',gr.grupo) AS grupoxsemestre, 
@@ -147,14 +156,14 @@ class PracticesRepository {
         AND s.docente_id = dc.id 
         AND sd.supervisor_id = sp.id 
         AND e.id = m.estudiante_id 
-        AND m.periodo_id = '8' 
+        AND m.periodo_id = ? 
         AND m.grupo_id = gr.id 
         AND gr.semestre_id = sm.id 
-        AND sa.periodo_id = '8' 
+        AND sa.periodo_id = ? 
         AND sp.id = ?
     `;
     
-    return await db.query(query, [supervisorId]);
+    return await db.query(query, [activePeriodId, activePeriodId, supervisorId]);
   }
 
   async findPracticesAssign() {
@@ -176,6 +185,8 @@ class PracticesRepository {
   }
 
   async findStudentsAvailable() {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
     const query = `
       SELECT e.id, e.nombre, CONCAT(s.semestre,' ',g.grupo) AS grupo, s.id AS semestre_id, 
              e.telefono, m.periodo_id 
@@ -184,68 +195,72 @@ class PracticesRepository {
         AND e.id = m.estudiante_id 
         AND m.grupo_id = g.id 
         AND g.semestre_id = s.id 
-        AND p.id = '8' 
+        AND p.id = ? 
         AND e.id NOT IN (SELECT sa.estudiante_id FROM solicitudes s, solicitudes_asignadas sa 
                          WHERE s.id = sa.solicitud_id AND sa.estado = '1') 
       ORDER BY e.nombre ASC
     `;
     
-    return await db.query(query);
+    return await db.query(query, [activePeriodId]);
   }
 
   async findConsolidateRecords() {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
     const query = `
       SELECT e.id, e.nombre, CONCAT(sm.semestre,' ',g.grupo) AS grupo, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '1' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_ppi, 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_ppi, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '2' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_investigacion, 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_investigacion, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '3' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_maestrotitular, 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_maestrotitular, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '4' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_supervisor 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_supervisor 
       FROM estudiantes e, matriculas_periodo m, grupos g, semestres sm 
       WHERE m.grupo_id = g.id 
         AND g.semestre_id = sm.id 
         AND e.id = m.estudiante_id 
-        AND m.periodo_id = '8' 
+        AND m.periodo_id = ? 
         AND e.estado = '1' 
       ORDER BY sm.semestre, g.grupo, e.nombre
     `;
     
-    return await db.query(query);
+    return await db.query(query, [activePeriodId, activePeriodId, activePeriodId, activePeriodId, activePeriodId]);
   }
 
   async findConsolidateRecordsByGroup(groupId) {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
     const query = `
       SELECT e.id, e.nombre, CONCAT(sm.semestre,' ',g.grupo) AS grupo, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '1' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_ppi, 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_ppi, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '2' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_investigacion, 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_investigacion, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '3' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_maestrotitular, 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_maestrotitular, 
              (SELECT n.nota FROM notas_practicas n, solicitudes_asignadas s 
               WHERE s.id = n.solicitud_id AND n.juicio_id = '4' AND s.estudiante_id = e.id 
-                AND n.periodo_id = '8' ORDER BY n.id DESC LIMIT 1) AS nota_supervisor 
+                AND n.periodo_id = ? ORDER BY n.id DESC LIMIT 1) AS nota_supervisor 
       FROM estudiantes e, matriculas_periodo m, grupos g, semestres sm 
       WHERE m.grupo_id = g.id 
         AND g.semestre_id = sm.id 
         AND e.id = m.estudiante_id 
         AND m.grupo_id = ? 
-        AND m.periodo_id = '8' 
+        AND m.periodo_id = ? 
         AND e.estado = '1' 
       ORDER BY sm.semestre, g.grupo, e.nombre
     `;
     
-    return await db.query(query, [groupId]);
+    return await db.query(query, [activePeriodId, activePeriodId, activePeriodId, activePeriodId, groupId, activePeriodId]);
   }
 
   async findAllJudgments() {
