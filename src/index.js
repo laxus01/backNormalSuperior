@@ -19,6 +19,7 @@ const institutionsPath = "/api/institutions";
 const teachersPath = "/api/teachers";
 const studentsPath = "/api/students";
 const practicesPath = "/api/practices";
+const periodsPath = "/api/periods";
 
 // Intializations
 const app = express();
@@ -108,6 +109,7 @@ app.use(institutionsPath, require("./institutions/institutions.module"));
 app.use(teachersPath, require("./teachers/teachers.module"));
 app.use(studentsPath, require("./students/students.module"));
 app.use(practicesPath, require("./practices/practices.module"));
+app.use(periodsPath, require("./shared/utils/periods.module"));
 
 
 // Global error handler
