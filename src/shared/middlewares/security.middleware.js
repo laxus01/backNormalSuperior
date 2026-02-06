@@ -10,6 +10,9 @@ const createRateLimiter = (windowMs, max, message) => {
   return rateLimit({
     windowMs,
     max,
+    keyGenerator: (req) => {
+      return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+    },
     message: {
       status: 'error',
       message
