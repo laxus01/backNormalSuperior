@@ -9,6 +9,7 @@ router.use(verifyToken);
 
 // Practice management routes
 router.post("/", PracticesController.savePractice);
+router.post("/savePractice", PracticesController.savePractice);
 router.get("/", PracticesController.getPractices);
 router.get("/byGroup/:id", PracticesController.getPracticesByGroup);
 router.get("/byInstitution/:id", PracticesController.getPracticesByInstitution);
