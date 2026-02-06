@@ -32,8 +32,11 @@ app.disable('x-powered-by'); // Remove Express signature
 // Security Middlewares
 app.use(helmetConfig);
 app.use(securityHeaders);
-app.use(generalLimiter);
 app.use(securityLogging);
+
+// Apply rate limiter only to public routes (login, etc.)
+// API routes are protected by JWT authentication
+app.use(usersPath, generalLimiter);
 
 // CORS Configuration
 const corsOptions = {
