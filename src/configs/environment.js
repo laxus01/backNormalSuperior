@@ -29,7 +29,7 @@ const config = {
   security: {
     bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS) || 12,
     rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 900000, // 15 minutes
-    rateLimitMaxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100
+    rateLimitMaxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 300
   },
   
   // CORS Configuration

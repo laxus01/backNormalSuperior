@@ -1,7 +1,11 @@
 const express = require("express");
 const PracticesController = require("./practices.controller");
+const { verifyToken } = require("../shared/middlewares/auth.middleware");
 
 const router = express.Router();
+
+// Proteger todas las rutas de practices
+router.use(verifyToken);
 
 // Practice management routes
 router.post("/", PracticesController.savePractice);

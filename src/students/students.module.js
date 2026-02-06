@@ -1,7 +1,11 @@
 const express = require("express");
 const StudentsController = require("./students.controller");
+const { verifyToken } = require("../shared/middlewares/auth.middleware");
 
 const router = express.Router();
+
+// Proteger todas las rutas de estudiantes
+router.use(verifyToken);
 
 // Student management routes
 router.post("/", StudentsController.saveStudent);
