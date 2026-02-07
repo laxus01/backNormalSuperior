@@ -27,6 +27,7 @@ router.get("/getPracticesAssign", PracticesController.getPracticesAssign); // Fr
 router.get("/studentsAvailable", PracticesController.getListStudentsAvailable);
 router.get("/getListStudentsAvailable", PracticesController.getListStudentsAvailable); // Frontend compatibility route
 router.delete("/deleteAssign/:id", PracticesController.deleteAssign);
+router.delete("/:id", PracticesController.deleteAssign); // Frontend compatibility route
 
 // Records and grades routes
 router.post("/saveRecord", PracticesController.saveRecord);
