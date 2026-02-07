@@ -12,8 +12,11 @@ router.post("/", PracticesController.savePractice);
 router.post("/savePractice", PracticesController.savePractice);
 router.get("/", PracticesController.getPractices);
 router.get("/byGroup/:id", PracticesController.getPracticesByGroup);
+router.get("/getPracticesByGroup/:id", PracticesController.getPracticesByGroup); // Frontend compatibility route
 router.get("/byInstitution/:id", PracticesController.getPracticesByInstitution);
+router.get("/getPracticesByInstitution/:id", PracticesController.getPracticesByInstitution); // Frontend compatibility route
 router.get("/bySupervisor/:id", PracticesController.getPracticesBySupervisor);
+router.get("/getPracticesBySupervisor/:id", PracticesController.getPracticesBySupervisor); // Frontend compatibility route
 router.put("/update/:id", PracticesController.updatePractice);
 router.put("/inactivate/:id", PracticesController.inactivatePractice);
 
