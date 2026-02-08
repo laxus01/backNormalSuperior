@@ -19,6 +19,7 @@ router.get("/bySupervisor/:id", PracticesController.getPracticesBySupervisor);
 router.get("/getPracticesBySupervisor/:id", PracticesController.getPracticesBySupervisor); // Frontend compatibility route
 router.put("/update/:id", PracticesController.updatePractice);
 router.put("/inactivate/:id", PracticesController.inactivatePractice);
+router.put("/updateSolicitud/:id", PracticesController.updateSolicitud);
 
 // Assignment routes
 router.post("/saveAssign", PracticesController.saveAssign);
@@ -26,6 +27,8 @@ router.get("/practicesAssign", PracticesController.getPracticesAssign);
 router.get("/getPracticesAssign", PracticesController.getPracticesAssign); // Frontend compatibility route
 router.get("/studentsAvailable", PracticesController.getListStudentsAvailable);
 router.get("/getListStudentsAvailable", PracticesController.getListStudentsAvailable); // Frontend compatibility route
+router.put("/updateAssign/:id", PracticesController.updateAssign);
+router.get("/allStudentsByPeriod", PracticesController.getAllStudentsByPeriod);
 router.delete("/deleteAssign/:id", PracticesController.deleteAssign);
 router.delete("/:id", PracticesController.deleteAssign); // Frontend compatibility route
 

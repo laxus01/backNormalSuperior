@@ -181,6 +181,42 @@ class PracticesController {
     }
   }
 
+  async updateSolicitud(req, res) {
+    try {
+      const result = await PracticesService.updateSolicitud(req.params.id, req.body);
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ 
+        res: "Error al actualizar la solicitud.",
+        error: error.message 
+      });
+    }
+  }
+
+  async updateAssign(req, res) {
+    try {
+      const result = await PracticesService.updateAssign(req.params.id, req.body);
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ 
+        res: "Error al actualizar la asignación.",
+        error: error.message 
+      });
+    }
+  }
+
+  async getAllStudentsByPeriod(req, res) {
+    try {
+      const result = await PracticesService.getAllStudentsByPeriod();
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ 
+        res: "Error al consultar los maestros en formación.",
+        error: error.message 
+      });
+    }
+  }
+
   async deleteAssign(req, res) {
     try {
       const result = await PracticesService.deleteAssign(req.params.id);

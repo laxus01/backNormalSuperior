@@ -200,6 +200,53 @@ class PracticesService {
     return { res: "Asignación eliminada correctamente" };
   }
 
+  async updateSolicitud(solicitudId, solicitudData) {
+    if (!solicitudId) {
+      throw new Error("El ID de la solicitud es obligatorio");
+    }
+
+    const { sede_id, jornada_id, detallegrupoc_id, detalle, docente_id } = solicitudData;
+
+    if (!sede_id || !jornada_id || !detallegrupoc_id || !docente_id) {
+      throw new Error("Todos los campos obligatorios deben ser proporcionados");
+    }
+
+    await PracticesRepository.updateSolicitud(solicitudId, {
+      sede_id,
+      jornada_id,
+      detallegrupoc_id,
+      detalle,
+      docente_id
+    });
+
+    return { res: "La solicitud se actualizó correctamente" };
+  }
+
+  async updateAssign(assignId, assignData) {
+    if (!assignId) {
+      throw new Error("El ID de la asignación es obligatorio");
+    }
+
+    const { estudiante_id } = assignData;
+
+    if (!estudiante_id) {
+      throw new Error("El maestro en formación es obligatorio");
+    }
+
+    await PracticesRepository.updateAssign(assignId, estudiante_id);
+    return { res: "La asignación se actualizó correctamente" };
+  }
+
+  async getAllStudentsByPeriod() {
+    const students = await PracticesRepository.findAllStudentsByPeriod();
+    
+    if (students.length === 0) {
+      return { res: "No existen maestros en formación registrados" };
+    }
+
+    return { desserts: students };
+  }
+
   async deleteAssign(assignId) {
     if (!assignId) {
       throw new Error("El ID de la asignación es obligatorio");

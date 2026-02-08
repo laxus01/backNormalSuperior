@@ -168,7 +168,8 @@ class PracticesRepository {
 
   async findPracticesAssign() {
     const query = `
-      SELECT i.institucion, s.id, se.sede, j.jornada, g.grado, dg.grupo, d.nombre, d.telefono 
+      SELECT i.institucion, s.id, se.sede, j.jornada, g.grado, dg.grupo, d.nombre, d.telefono,
+             s.sede_id, s.jornada_id, s.detallegrupoc_id, s.docente_id, s.detalle, dg.grado_id 
       FROM solicitudes s, docentes d, grados g, detalle_grupoc dg, jornadas j, sedes se, instituciones i 
       WHERE se.institucion_id = i.id 
         AND s.sede_id = se.id 
@@ -285,6 +286,38 @@ class PracticesRepository {
   async inactivatePractice(practiceId) {
     const query = "UPDATE solicitudes_asignadas SET estado = ? WHERE id = ?";
     return await db.query(query, [0, practiceId]);
+  }
+
+  async updateSolicitud(solicitudId, solicitudData) {
+    const { sede_id, jornada_id, detallegrupoc_id, detalle, docente_id } = solicitudData;
+    
+    const query = "UPDATE solicitudes SET sede_id = ?, jornada_id = ?, detallegrupoc_id = ?, detalle = ?, docente_id = ? WHERE id = ?";
+    const values = [sede_id, jornada_id, detallegrupoc_id, detalle, docente_id, solicitudId];
+    
+    return await db.query(query, values);
+  }
+
+  async updateAssign(assignId, estudiante_id) {
+    const query = "UPDATE solicitudes_asignadas SET estudiante_id = ? WHERE id = ?";
+    return await db.query(query, [estudiante_id, assignId]);
+  }
+
+  async findAllStudentsByPeriod() {
+    const activePeriodId = await periodUtil.getActivePeriodId();
+    
+    const query = `
+      SELECT e.id, e.nombre, CONCAT(s.semestre,' ',g.grupo) AS grupo, s.id AS semestre_id, 
+             e.telefono, m.periodo_id 
+      FROM estudiantes e, matriculas_periodo m, semestres s, grupos g, periodos p 
+      WHERE m.periodo_id = p.id 
+        AND e.id = m.estudiante_id 
+        AND m.grupo_id = g.id 
+        AND g.semestre_id = s.id 
+        AND p.id = ? 
+      ORDER BY e.nombre ASC
+    `;
+    
+    return await db.query(query, [activePeriodId]);
   }
 
   async deleteAssign(assignId) {
